@@ -1,29 +1,49 @@
 import { useState,useEffect } from "react"  
+import HammerTony from "../ui/HammerTony";
 export default function ElencoRicette() {
 
-const [listaRicette, setListaRicette] = useState([])
+const [listaRicette, setListaRicette] = useState([]);
+const [loading, setLoading] = useState(false);
 
 useEffect(() => {
     async function recuperaRicette() {
-        try {
-            const response = await fetch('https://dummyjson.com/recipes')
-            const data = await response.json()
-            setListaRicette(data.recipes)
-        } catch (error) {
-            console.error(error)
-        }
+      setLoading(true);
+      // Fake delay
+      await new Promise((resolve) => setTimeout(resolve, 2500));
+      try {
+        const response = await fetch(
+          "https://dummyjson.com/recipes"
+        );
+
+        const data = await response.json();
+
+        setListaRicette(data.recipes);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
     }
-    recuperaRicette()
-}, [])
 
+    recuperaRicette();
+  }, []);
 
+  // SE STA ANCORA CARICANDO, MOSTRA HAMMER TONY
+  if (loading) {
+    return <HammerTony />;
+  }
+
+  // QUANDO HA FINITO, MOSTRA LE RICETTE
   return (
     <section className="container py-5">
       <h2 className="mb-4">Ricette</h2>
 
       <ul className="row g-4 list-unstyled">
         {listaRicette.map((ricetta) => (
-          <li className="col-12 col-md-6 col-lg-4" key={ricetta.id}>
+          <li
+            className="col-12 col-md-6 col-lg-4"
+            key={ricetta.id}
+          >
             <div className="card h-100">
               <img
                 src={ricetta.image}
@@ -32,7 +52,9 @@ useEffect(() => {
               />
 
               <div className="card-body">
-                <h5 className="card-title">{ricetta.name}</h5>
+                <h5 className="card-title">
+                  {ricetta.name}
+                </h5>
 
                 <p className="card-text">
                   Descrizione della ricetta...
