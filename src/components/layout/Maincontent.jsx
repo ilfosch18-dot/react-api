@@ -1,5 +1,7 @@
+import ElencoRicette from "../sections/ElencoRicette";
+
 export default function Maincontent() {
   return (
-    <div>Maincontent</div>
+    <div><ElencoRicette /></div>
   )
 }
